@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ryu.mission-control",
+  "version": "1.0.0",
+  "description": "The project-level view over many chats: what each session accomplished, per-day activity, and the to-dos left outstanding across threads nobody reopened.",
+  "keywords": ["dashboard", "summary", "history", "tasks", "review"],
+  "extensions": {
+    "com.ryuhq.ryu": {
+      "id": "@ryu/mission-control",
+      "displayName": "Mission Control"
+    }
+  }
+}
