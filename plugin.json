@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ryu.mission-control",
+  "version": "0.1.14",
+  "description": "The project-level view over many chats: recent sessions and what each one accomplished, per-day activity, the files several chats keep returning to, and the to-dos left outstanding in threads nobody reopened. Declares the out-of-process ryu-mission-control sidecar (kind:local), which owns the digest store and the cross-chat rollup and is served to the desktop through the generic ext-proxy public_mount. The digests themselves are computed in the desktop from each chat's message parts and PUT here, because a manifest sidecar has no conversation read and the parts column is sealed at rest — the same function feeds the in-chat Mission Control panel, so a chat's summary is identical in both places.",
+  "author": {
+    "name": "Ryu",
+    "url": "https://ryuhq.com"
+  },
+  "homepage": "https://github.com/amajorai/ryu-mission-control",
+  "repository": "https://github.com/amajorai/ryu-mission-control",
+  "keywords": [
+    "dashboard",
+    "summary",
+    "history",
+    "tasks",
+    "review"
+  ],
+  "extensions": {
+    "com.ryuhq.ryu": {
+      "id": "@ryu/mission-control",
+      "displayName": "Mission Control"
+    }
+  }
+}
