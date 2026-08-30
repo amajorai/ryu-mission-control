@@ -1,0 +1,43 @@
+[package]
+name = "ryu-mission-control"
+version = "0.2.4"
+edition = "2021"
+license = "Apache-2.0"
+description = "Mission Control: the project-level view over many chats. Stores the per-conversation work digest the desktop derives from each chat's message parts, then rolls those up across days, weeks and folders into recent work, per-day activity, files touched and the outstanding to-dos nobody closed. Optionally narrates a conversation through the node's own side model. ZERO dependency on apps/core — the sidecar reaches the host only over the generic `/api/host/model/complete` callback."
+repository = "https://github.com/amajorai/ryu"
+
+# The out-of-process sidecar binary. Core spawns it (`kind: local`, sibling on
+# PATH / `RYU_MISSION_CONTROL_BIN`), health-checks it, and proxies
+# `/api/mission-control/*` to it on loopback — exactly like `ryu-ugc` /
+# `ryu-reasoning`. This bin is just the process shell around the crate's
+# `routes()`; the desktop page reaches it through the manifest's
+# `http.public_mount`.
+[[bin]]
+name = "ryu-mission-control"
+path = "src/main.rs"
+
+# Versions are matched to apps/core/Cargo.toml so an in-process merge into Core's
+# axum router has no version skew. This crate has ZERO dependency on apps/core.
+[dependencies]
+ryu-sidecar-runtime = { path = "../crates/core/sidecar-runtime", version = "0.2.4" }
+tokio = { version = "1", features = ["full"] }
+axum = "0.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+rusqlite = { version = "0.40.0", features = ["bundled"] }
+reqwest = { version = "0.12", features = ["json"] }
+tracing = "0.1"
+# Sidecar-binary-only deps (data-dir resolution + logging), mirroring
+# `ryu-ugc` / `ryu-reasoning`. Core already pulls all of these, so there is no new
+# dependency in the in-process build.
+dirs = "5"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# The OpenAPI document this sidecar serves at `GET /openapi.json`. Core fetches it on
+# the first Healthy edge and derives one LLM tool per operation, so the annotations are
+# the ONLY way an agent can reach this app — an unannotated route is invisible, not
+# merely undocumented. Pinned to the workspace-wide 5.5.0; there is no `utoipa-axum`
+# here, which is why every `paths(...)` row is hand-written.
+utoipa = { version = "5", features = ["axum_extras", "chrono", "uuid"] }
